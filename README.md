@@ -50,7 +50,7 @@ BudgetFlow is a premium, high-performance personal finance dashboard built with 
 
 ## 📸 Screenshots
 
-*(Add screenshots here)*
+<img width="1855" height="950" alt="image" src="https://github.com/user-attachments/assets/2f4566d5-25ab-4a05-880b-6edb9c4c632c" />
 
 ## 📄 License
 
