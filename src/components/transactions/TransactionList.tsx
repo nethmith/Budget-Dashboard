@@ -42,9 +42,15 @@ const categoryIcons: Record<string, React.ReactNode> = {
     other: <HelpCircle className="h-4 w-4" />,
 }
 
-export function TransactionList() {
+export function TransactionList({ typeFilter }: { typeFilter?: "income" | "expense" }) {
     const { removeTransaction, addTransaction } = useTransactionStore()
-    const transactions = useFilteredTransactions()
+    const allFilteredTransactions = useFilteredTransactions()
+
+    const transactions = React.useMemo(() => {
+        if (!typeFilter) return allFilteredTransactions
+        return allFilteredTransactions.filter(t => t.type === typeFilter)
+    }, [allFilteredTransactions, typeFilter])
+
     const [deleteId, setDeleteId] = React.useState<string | null>(null)
 
     const handleDelete = () => {
