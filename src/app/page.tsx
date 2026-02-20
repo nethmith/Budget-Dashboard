@@ -1,5 +1,5 @@
 import { Wallet, TrendingUp, TrendingDown, PiggyBank } from 'lucide-react';
-import { AddTransactionDialog } from '@/components/transactions/AddTransactionDialog';
+import { TransactionFormDialog } from '@/components/transactions/TransactionFormDialog';
 import { TransactionList } from '@/components/transactions/TransactionList';
 
 export default function DashboardPage() {
@@ -7,7 +7,7 @@ export default function DashboardPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-        <AddTransactionDialog />
+        <TransactionFormDialog />
       </div>
 
       {/* Stats Grid Placeholder */}

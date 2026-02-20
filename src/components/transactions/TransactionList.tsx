@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { format } from "date-fns"
-import { Trash2, ArrowUpCircle, ArrowDownCircle } from "lucide-react"
+import { Trash2, ArrowUpCircle, ArrowDownCircle, Pencil } from "lucide-react"
 
 import {
     Table,
@@ -18,15 +18,27 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { useTransactionStore } from "@/store/useStore"
 import { Transaction } from "@/types"
 import { toast } from "sonner"
+import { TransactionFormDialog } from "./TransactionFormDialog"
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 
 export function TransactionList() {
     const { transactions, removeTransaction } = useTransactionStore()
+    const [deleteId, setDeleteId] = React.useState<string | null>(null)
 
-    const handleDelete = (id: string) => {
-        // Basic confirmation (Day 6 will be better)
-        if (confirm("Are you sure you want to delete this transaction?")) {
-            removeTransaction(id)
+    const handleDelete = () => {
+        if (deleteId) {
+            removeTransaction(deleteId)
             toast.success("Transaction deleted")
+            setDeleteId(null)
         }
     }
 
@@ -53,7 +65,7 @@ export function TransactionList() {
                             <TableHead>Category</TableHead>
                             <TableHead className="hidden md:table-cell">Note</TableHead>
                             <TableHead className="text-right">Amount</TableHead>
-                            <TableHead className="w-[50px]"></TableHead>
+                            <TableHead className="w-[100px] text-right">Actions</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -89,21 +101,50 @@ export function TransactionList() {
                                         }).format(transaction.amount)}
                                     </span>
                                 </TableCell>
-                                <TableCell>
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        className="h-8 w-8 text-muted-foreground hover:text-destructive"
-                                        onClick={() => handleDelete(transaction.id)}
-                                    >
-                                        <Trash2 className="h-4 w-4" />
-                                    </Button>
+                                <TableCell className="text-right">
+                                    <div className="flex items-center justify-end gap-2">
+                                        <TransactionFormDialog
+                                            transaction={transaction}
+                                            trigger={
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    className="h-8 w-8 text-muted-foreground hover:text-primary"
+                                                >
+                                                    <Pencil className="h-4 w-4" />
+                                                </Button>
+                                            }
+                                        />
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                                            onClick={() => setDeleteId(transaction.id)}
+                                        >
+                                            <Trash2 className="h-4 w-4" />
+                                        </Button>
+                                    </div>
                                 </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
             </ScrollArea>
+
+            <AlertDialog open={!!deleteId} onOpenChange={(open) => !open && setDeleteId(null)}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            This action cannot be undone. This will permanently delete the transaction.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">Delete</AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     )
 }
