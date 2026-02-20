@@ -15,11 +15,11 @@ import {
 } from "recharts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { useTransactionStore } from "@/store/useStore"
+import { useFilteredTransactions } from "@/hooks/useFilteredTransactions"
 import { format, subMonths, startOfMonth, endOfMonth, isWithinInterval } from "date-fns"
 
 export function MonthlyTrendChart() {
-    const { transactions } = useTransactionStore()
+    const transactions = useFilteredTransactions()
     const [chartType, setChartType] = useState<"bar" | "line">("bar")
 
     const data = useMemo(() => {

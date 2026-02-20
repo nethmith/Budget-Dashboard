@@ -6,11 +6,14 @@ import { TransactionFormDialog } from '@/components/transactions/TransactionForm
 import { TransactionList } from '@/components/transactions/TransactionList';
 import { CategoryPieChart } from '@/components/charts/CategoryPieChart';
 import { MonthlyTrendChart } from '@/components/charts/MonthlyTrendChart';
+import { TransactionFilters } from '@/components/transactions/TransactionFilters';
 import { useTransactionStore } from '@/store/useStore';
+import { useFilteredTransactions } from '@/hooks/useFilteredTransactions';
 import { isSameMonth } from 'date-fns';
 
 export default function DashboardPage() {
-  const { transactions } = useTransactionStore();
+  const { transactions: allTransactions } = useTransactionStore();
+  const transactions = useFilteredTransactions();
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -18,41 +21,24 @@ export default function DashboardPage() {
   }, []);
 
   const stats = useMemo(() => {
-    const now = new Date();
-
-    // Total Balance = All Time Income - All Time Expenses
-    const totalIncome = transactions
+    const income = transactions
       .filter(t => t.type === 'income')
       .reduce((acc, t) => acc + t.amount, 0);
 
-    const totalExpenses = transactions
+    const expenses = transactions
       .filter(t => t.type === 'expense')
       .reduce((acc, t) => acc + t.amount, 0);
 
-    const balance = totalIncome - totalExpenses;
+    const balance = income - expenses;
 
-    // This Month's Income & Expenses
-    const thisMonthTransactions = transactions.filter(t =>
-      isSameMonth(new Date(t.date), now)
-    );
-
-    const thisMonthIncome = thisMonthTransactions
-      .filter(t => t.type === 'income')
-      .reduce((acc, t) => acc + t.amount, 0);
-
-    const thisMonthExpenses = thisMonthTransactions
-      .filter(t => t.type === 'expense')
-      .reduce((acc, t) => acc + t.amount, 0);
-
-    // Savings Rate (This Month)
-    const savingsRate = thisMonthIncome > 0
-      ? ((thisMonthIncome - thisMonthExpenses) / thisMonthIncome) * 100
+    const savingsRate = income > 0
+      ? ((income - expenses) / income) * 100
       : 0;
 
     return {
       balance,
-      income: thisMonthIncome,
-      expenses: thisMonthExpenses,
+      income,
+      expenses,
       savingsRate
     };
   }, [transactions]);
@@ -71,32 +57,32 @@ export default function DashboardPage() {
 
   const statCards = [
     {
-      title: "Total Balance",
+      title: "Current Balance",
       value: formatCurrency(stats.balance),
       icon: Wallet,
       color: "text-primary",
-      description: "All time balance"
+      description: "Based on active filters"
     },
     {
-      title: "Income (This Month)",
+      title: "Focus Income",
       value: formatCurrency(stats.income),
       icon: TrendingUp,
       color: "text-emerald-500",
-      description: "Inflows this month"
+      description: "Total filtered income"
     },
     {
-      title: "Expenses (This Month)",
+      title: "Focus Expenses",
       value: formatCurrency(stats.expenses),
       icon: TrendingDown,
       color: "text-rose-500",
-      description: "Outflows this month"
+      description: "Total filtered expenses"
     },
     {
       title: "Savings Rate",
       value: `${stats.savingsRate.toFixed(1)}%`,
       icon: PiggyBank,
       color: "text-blue-500",
-      description: "Of monthly income"
+      description: "Income/Expense ratio"
     }
   ];
 
@@ -106,6 +92,8 @@ export default function DashboardPage() {
         <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
         <TransactionFormDialog />
       </div>
+
+      <TransactionFilters />
 
       {/* Stats Grid */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">

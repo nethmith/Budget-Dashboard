@@ -16,7 +16,6 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useTransactionStore } from "@/store/useStore"
-import { Transaction } from "@/types"
 import { toast } from "sonner"
 import { TransactionFormDialog } from "./TransactionFormDialog"
 import {
@@ -29,9 +28,11 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+import { useFilteredTransactions } from "@/hooks/useFilteredTransactions"
 
 export function TransactionList() {
-    const { transactions, removeTransaction } = useTransactionStore()
+    const { removeTransaction } = useTransactionStore()
+    const transactions = useFilteredTransactions()
     const [deleteId, setDeleteId] = React.useState<string | null>(null)
 
     const handleDelete = () => {
@@ -50,7 +51,7 @@ export function TransactionList() {
     if (transactions.length === 0) {
         return (
             <div className="flex h-[200px] w-full flex-col items-center justify-center rounded-md border border-dashed text-sm text-muted-foreground">
-                No transactions found. Add one to get started!
+                No transactions found matching your filters.
             </div>
         )
     }

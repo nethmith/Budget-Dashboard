@@ -3,7 +3,7 @@
 import { useMemo } from "react"
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip, Legend } from "recharts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { useTransactionStore } from "@/store/useStore"
+import { useFilteredTransactions } from "@/hooks/useFilteredTransactions"
 
 const COLORS = [
     "#0088FE",
@@ -16,8 +16,10 @@ const COLORS = [
     "#8884d8",
 ]
 
+
+
 export function CategoryPieChart() {
-    const { transactions } = useTransactionStore()
+    const transactions = useFilteredTransactions()
 
     const data = useMemo(() => {
         const expenses = transactions.filter((t) => t.type === "expense")
