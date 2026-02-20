@@ -1,6 +1,6 @@
 "use client"
 
-import { Search, X, Filter } from "lucide-react"
+import { Search, X, Filter, Download } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import {
@@ -15,6 +15,8 @@ import { Badge } from "@/components/ui/badge"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Checkbox } from "@/components/ui/checkbox"
 import { format } from "date-fns"
+import { useFilteredTransactions } from "@/hooks/useFilteredTransactions"
+import { toast } from "sonner"
 
 const CATEGORIES = [
     "food",
@@ -52,6 +54,37 @@ export function TransactionFilters() {
         } else {
             setCategories([...categories, category])
         }
+    }
+
+    const filteredTransactions = useFilteredTransactions()
+
+    const exportCSV = () => {
+        if (filteredTransactions.length === 0) {
+            toast.error("No transactions to export")
+            return
+        }
+
+        const headers = ["Date", "Type", "Category", "Amount", "Note"]
+        const csvContent = [
+            headers.join(","),
+            ...filteredTransactions.map((t) => {
+                const date = format(new Date(t.date), "yyyy-MM-dd")
+                // Escape notes if they contain commas
+                const note = t.note ? `"${t.note.replace(/"/g, '""')}"` : ""
+                return [date, t.type, t.category, t.amount.toFixed(2), note].join(",")
+            })
+        ].join("\n")
+
+        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" })
+        const url = URL.createObjectURL(blob)
+        const link = document.createElement("a")
+        link.setAttribute("href", url)
+        link.setAttribute("download", `budget_export_${format(new Date(), "yyyy_MM_dd")}.csv`)
+        link.style.visibility = "hidden"
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        toast.success("CSV exported successfully")
     }
 
     const hasActiveFilters = search || type !== "all" || categories.length > 0 || dateRange
@@ -158,6 +191,18 @@ export function TransactionFilters() {
                         <X className="h-4 w-4" /> Clear
                     </Button>
                 )}
+
+                <div className="ml-auto flex items-center gap-2">
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={exportCSV}
+                        className="gap-2 text-xs font-medium"
+                    >
+                        <Download className="h-3.5 w-3.5" />
+                        Export CSV
+                    </Button>
+                </div>
             </div>
 
             {/* Active Filter Badges */}
