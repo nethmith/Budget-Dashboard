@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { format } from "date-fns"
-import { Trash2, ArrowUpCircle, ArrowDownCircle, Pencil } from "lucide-react"
+import { Trash2, ArrowUpCircle, ArrowDownCircle, Pencil, Utensils, Car, Tv, Banknote, Zap, HelpCircle } from "lucide-react"
 
 import {
     Table,
@@ -29,6 +29,16 @@ import {
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { useFilteredTransactions } from "@/hooks/useFilteredTransactions"
+import { Skeleton } from "@/components/ui/skeleton"
+
+const categoryIcons: Record<string, React.ReactNode> = {
+    food: <Utensils className="h-4 w-4" />,
+    transport: <Car className="h-4 w-4" />,
+    entertainment: <Tv className="h-4 w-4" />,
+    salary: <Banknote className="h-4 w-4" />,
+    utilities: <Zap className="h-4 w-4" />,
+    other: <HelpCircle className="h-4 w-4" />,
+}
 
 export function TransactionList() {
     const { removeTransaction } = useTransactionStore()
@@ -76,7 +86,8 @@ export function TransactionList() {
                                     {format(new Date(transaction.date), "MMM d, yyyy")}
                                 </TableCell>
                                 <TableCell>
-                                    <Badge variant="secondary" className="capitalize">
+                                    <Badge variant="secondary" className="capitalize flex items-center gap-2 w-fit">
+                                        {categoryIcons[transaction.category.toLowerCase()] || categoryIcons.other}
                                         {transaction.category}
                                     </Badge>
                                 </TableCell>
@@ -98,7 +109,8 @@ export function TransactionList() {
                                         )}
                                         {new Intl.NumberFormat("en-US", {
                                             style: "currency",
-                                            currency: "LKR", // Changed to LKR as requested in initial prompt
+                                            currency: "LKR",
+                                            minimumFractionDigits: 2,
                                         }).format(transaction.amount)}
                                     </span>
                                 </TableCell>
@@ -146,6 +158,23 @@ export function TransactionList() {
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
+        </div>
+    )
+}
+
+export function TransactionListSkeleton() {
+    return (
+        <div className="rounded-md border bg-card/50">
+            <div className="p-4 space-y-4">
+                {Array.from({ length: 5 }).map((_, i) => (
+                    <div key={i} className="flex items-center justify-between gap-4">
+                        <Skeleton className="h-10 w-[120px]" />
+                        <Skeleton className="h-10 flex-1" />
+                        <Skeleton className="h-10 w-[100px]" />
+                        <Skeleton className="h-10 w-[100px]" />
+                    </div>
+                ))}
+            </div>
         </div>
     )
 }

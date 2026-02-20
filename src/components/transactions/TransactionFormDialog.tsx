@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
-import { CalendarIcon, Plus, Pencil } from "lucide-react"
+import { CalendarIcon, Plus, Pencil, Utensils, Car, Tv, Banknote, Zap, HelpCircle } from "lucide-react"
 import { format } from "date-fns"
 
 import { cn } from "@/lib/utils"
@@ -192,7 +192,10 @@ export function TransactionFormDialog({ transaction, trigger }: TransactionFormD
                                 <FormItem>
                                     <FormLabel>Amount</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="0.00" type="number" step="0.01" {...field} />
+                                        <div className="relative">
+                                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground font-medium">LKR</span>
+                                            <Input placeholder="0.00" type="number" step="0.01" className="pl-12" {...field} />
+                                        </div>
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -213,12 +216,42 @@ export function TransactionFormDialog({ transaction, trigger }: TransactionFormD
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
-                                            <SelectItem value="food">Food</SelectItem>
-                                            <SelectItem value="transport">Transport</SelectItem>
-                                            <SelectItem value="entertainment">Entertainment</SelectItem>
-                                            <SelectItem value="salary">Salary</SelectItem>
-                                            <SelectItem value="utilities">Utilities</SelectItem>
-                                            <SelectItem value="other">Other</SelectItem>
+                                            <SelectItem value="food">
+                                                <div className="flex items-center gap-2">
+                                                    <Utensils className="h-4 w-4" />
+                                                    <span>Food</span>
+                                                </div>
+                                            </SelectItem>
+                                            <SelectItem value="transport">
+                                                <div className="flex items-center gap-2">
+                                                    <Car className="h-4 w-4" />
+                                                    <span>Transport</span>
+                                                </div>
+                                            </SelectItem>
+                                            <SelectItem value="entertainment">
+                                                <div className="flex items-center gap-2">
+                                                    <Tv className="h-4 w-4" />
+                                                    <span>Entertainment</span>
+                                                </div>
+                                            </SelectItem>
+                                            <SelectItem value="salary">
+                                                <div className="flex items-center gap-2">
+                                                    <Banknote className="h-4 w-4" />
+                                                    <span>Salary</span>
+                                                </div>
+                                            </SelectItem>
+                                            <SelectItem value="utilities">
+                                                <div className="flex items-center gap-2">
+                                                    <Zap className="h-4 w-4" />
+                                                    <span>Utilities</span>
+                                                </div>
+                                            </SelectItem>
+                                            <SelectItem value="other">
+                                                <div className="flex items-center gap-2">
+                                                    <HelpCircle className="h-4 w-4" />
+                                                    <span>Other</span>
+                                                </div>
+                                            </SelectItem>
                                         </SelectContent>
                                     </Select>
                                     <FormMessage />
