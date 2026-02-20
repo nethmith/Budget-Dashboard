@@ -6,6 +6,13 @@ export const useTransactionStore = create<TransactionStore>()(
     persist(
         (set) => ({
             transactions: [],
+            budgetGoals: {
+                food: 15000,
+                transport: 5000,
+                entertainment: 10000,
+                utilities: 12000,
+                other: 5000,
+            },
             addTransaction: (transaction: Transaction) =>
                 set((state) => ({ transactions: [transaction, ...state.transactions] })),
             removeTransaction: (id: string) =>
@@ -15,6 +22,10 @@ export const useTransactionStore = create<TransactionStore>()(
                     transactions: state.transactions.map((t) =>
                         t.id === id ? updatedTransaction : t
                     ),
+                })),
+            setBudgetGoal: (category: string, amount: number) =>
+                set((state) => ({
+                    budgetGoals: { ...state.budgetGoals, [category]: amount },
                 })),
         }),
         {

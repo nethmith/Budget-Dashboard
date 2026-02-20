@@ -10,8 +10,9 @@ import { cn } from '@/lib/utils';
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
 export const metadata: Metadata = {
-  title: 'BudgetFlow - Personal Finance Tracker',
-  description: 'Track your income and expenses with ease.',
+  title: 'BudgetFlow | Advanced Personal Finance Tracker',
+  description: 'Manage your budget, track expenses, and visualize your financial trends with BudgetFlow. A premium, dark-mode ready personal finance dashboard.',
+  keywords: ['finance', 'budget', 'tracker', 'expenses', 'income', 'dashboard', 'react', 'nextjs'],
 };
 
 export default function RootLayout({

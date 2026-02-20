@@ -36,6 +36,7 @@ import {
 import { Textarea } from "@/components/ui/textarea"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Checkbox } from "@/components/ui/checkbox"
 import { Calendar } from "@/components/ui/calendar"
 import { Transaction } from "@/types"
 import { v4 as uuidv4 } from "uuid"
@@ -48,6 +49,7 @@ const formSchema = z.object({
     date: z.date(),
     note: z.string().optional(),
     type: z.enum(["income", "expense"]),
+    recurring: z.boolean().default(false),
 })
 
 type FormValues = z.infer<typeof formSchema>
@@ -71,6 +73,7 @@ export function TransactionFormDialog({ transaction, trigger }: TransactionFormD
             date: transaction?.date ? new Date(transaction.date) : new Date(),
             note: transaction?.note || "",
             type: transaction?.type || "expense",
+            recurring: transaction?.recurring || false,
         },
     })
 
@@ -83,6 +86,7 @@ export function TransactionFormDialog({ transaction, trigger }: TransactionFormD
                 date: transaction?.date ? new Date(transaction.date) : new Date(),
                 note: transaction?.note || "",
                 type: transaction?.type || "expense",
+                recurring: transaction?.recurring || false,
             })
         }
     }, [transaction, open, form])
@@ -97,6 +101,7 @@ export function TransactionFormDialog({ transaction, trigger }: TransactionFormD
                     category: values.category,
                     date: values.date.toISOString(),
                     note: values.note,
+                    recurring: values.recurring,
                 })
                 toast.success("Transaction updated successfully")
             } else {
@@ -107,6 +112,7 @@ export function TransactionFormDialog({ transaction, trigger }: TransactionFormD
                     category: values.category,
                     date: values.date.toISOString(),
                     note: values.note,
+                    recurring: values.recurring,
                 })
                 toast.success("Transaction added successfully")
             }
@@ -119,6 +125,7 @@ export function TransactionFormDialog({ transaction, trigger }: TransactionFormD
                     date: new Date(),
                     note: "",
                     type: "expense",
+                    recurring: false,
                 })
             }
         } catch (error) {
@@ -131,7 +138,7 @@ export function TransactionFormDialog({ transaction, trigger }: TransactionFormD
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 {trigger || (
-                    <Button className="gap-2">
+                    <Button className="gap-2" aria-label="Open add transaction dialog">
                         <Plus className="h-4 w-4" /> Add Transaction
                     </Button>
                 )}
@@ -317,6 +324,30 @@ export function TransactionFormDialog({ transaction, trigger }: TransactionFormD
                                         />
                                     </FormControl>
                                     <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                        {/* Recurring */}
+                        <FormField
+                            control={form.control}
+                            name="recurring"
+                            render={({ field }) => (
+                                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                                    <FormControl>
+                                        <Checkbox
+                                            checked={field.value}
+                                            onCheckedChange={field.onChange}
+                                        />
+                                    </FormControl>
+                                    <div className="space-y-1 leading-none">
+                                        <FormLabel>
+                                            Recurring Monthly
+                                        </FormLabel>
+                                        <p className="text-xs text-muted-foreground">
+                                            This transaction repeats every month.
+                                        </p>
+                                    </div>
                                 </FormItem>
                             )}
                         />

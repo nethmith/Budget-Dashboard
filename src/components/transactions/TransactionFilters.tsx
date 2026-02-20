@@ -100,12 +100,13 @@ export function TransactionFilters() {
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                         className="pl-9 bg-background"
+                        aria-label="Search transactions"
                     />
                 </div>
 
                 {/* Type Filter */}
                 <Select value={type} onValueChange={(v: any) => setType(v)}>
-                    <SelectTrigger className="w-[130px] bg-background">
+                    <SelectTrigger className="w-[130px] bg-background" aria-label="Filter by type">
                         <SelectValue placeholder="Type" />
                     </SelectTrigger>
                     <SelectContent>
@@ -118,7 +119,11 @@ export function TransactionFilters() {
                 {/* Category Multi-select */}
                 <Popover>
                     <PopoverTrigger asChild>
-                        <Button variant="outline" className="bg-background gap-2 min-w-[140px] justify-between">
+                        <Button
+                            variant="outline"
+                            className="bg-background gap-2 min-w-[140px] justify-between"
+                            aria-label="Select categories"
+                        >
                             <span className="truncate">
                                 {categories.length === 0
                                     ? "All Categories"
@@ -157,7 +162,7 @@ export function TransactionFilters() {
                             }
                         }}
                     >
-                        <SelectTrigger className="w-[130px] bg-background">
+                        <SelectTrigger className="w-[130px] bg-background" aria-label="Select month">
                             <SelectValue placeholder="Month" />
                         </SelectTrigger>
                         <SelectContent>
@@ -173,7 +178,7 @@ export function TransactionFilters() {
                             value={dateRange.year.toString()}
                             onValueChange={(v) => setDateRange({ ...dateRange, year: parseInt(v) })}
                         >
-                            <SelectTrigger className="w-[100px] bg-background">
+                            <SelectTrigger className="w-[100px] bg-background" aria-label="Select year">
                                 <SelectValue placeholder="Year" />
                             </SelectTrigger>
                             <SelectContent>
@@ -198,6 +203,7 @@ export function TransactionFilters() {
                         size="sm"
                         onClick={exportCSV}
                         className="gap-2 text-xs font-medium"
+                        aria-label="Export transactions as CSV"
                     >
                         <Download className="h-3.5 w-3.5" />
                         Export CSV

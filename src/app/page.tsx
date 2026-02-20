@@ -7,10 +7,13 @@ import { TransactionList, TransactionListSkeleton } from '@/components/transacti
 import { CategoryPieChart } from '@/components/charts/CategoryPieChart';
 import { MonthlyTrendChart } from '@/components/charts/MonthlyTrendChart';
 import { TransactionFilters } from '@/components/transactions/TransactionFilters';
+import { BudgetGoals } from '@/components/dashboard/BudgetGoals';
 import { useTransactionStore } from '@/store/useStore';
 import { useFilteredTransactions } from '@/hooks/useFilteredTransactions';
 import { Skeleton } from '@/components/ui/skeleton';
 import { isSameMonth } from 'date-fns';
+import { motion, AnimatePresence } from 'framer-motion';
+import ErrorBoundary from '@/components/common/ErrorBoundary';
 
 export default function DashboardPage() {
   const { transactions: allTransactions } = useTransactionStore();
@@ -93,63 +96,125 @@ export default function DashboardPage() {
   ];
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-        <TransactionFormDialog />
-      </div>
-
-      <TransactionFilters />
-
-      {/* Stats Grid */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {statCards.map((stat, i) => (
-          <div key={i} className="rounded-xl border bg-card text-card-foreground shadow-sm p-6">
-            <div className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <h3 className="tracking-tight text-sm font-medium text-muted-foreground">{stat.title}</h3>
-              <stat.icon className={`h-4 w-4 ${stat.color}`} />
-            </div>
-            <div className="content">
-              {isLoading ? (
-                <Skeleton className="h-8 w-24 mb-1" />
-              ) : (
-                <div className="text-2xl font-bold">{stat.value}</div>
-              )}
-              {isLoading ? (
-                <Skeleton className="h-4 w-32" />
-              ) : (
-                <p className="text-xs text-muted-foreground">{stat.description}</p>
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-        <div className="col-span-4">
-          {isLoading ? (
-            <div className="rounded-xl border bg-card p-6 h-[350px]">
-              <Skeleton className="h-full w-full" />
-            </div>
-          ) : (
-            <MonthlyTrendChart />
-          )}
+    <ErrorBoundary>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="space-y-6"
+      >
+        <div className="flex items-center justify-between">
+          <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+          <TransactionFormDialog />
         </div>
-        <div className="col-span-3">
-          {isLoading ? (
-            <div className="rounded-xl border bg-card p-6 h-[350px]">
-              <Skeleton className="h-full w-full" />
-            </div>
-          ) : (
-            <CategoryPieChart />
-          )}
-        </div>
-      </div>
 
-      <div className="rounded-xl border bg-card text-card-foreground shadow-sm p-6">
-        <h3 className="font-semibold leading-none tracking-tight mb-4">Recent Transactions</h3>
-        {isLoading ? <TransactionListSkeleton /> : <TransactionList />}
-      </div>
-    </div>
+        <TransactionFilters />
+
+        {/* Stats Grid */}
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {statCards.map((stat, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: i * 0.1 }}
+              className="rounded-xl border bg-card text-card-foreground shadow-sm p-6"
+            >
+              <div className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <h3 className="tracking-tight text-sm font-medium text-muted-foreground">{stat.title}</h3>
+                <stat.icon className={`h-4 w-4 ${stat.color}`} />
+              </div>
+              <div className="content">
+                {isLoading ? (
+                  <Skeleton className="h-8 w-24 mb-1" />
+                ) : (
+                  <div className="text-2xl font-bold">{stat.value}</div>
+                )}
+                {isLoading ? (
+                  <Skeleton className="h-4 w-32" />
+                ) : (
+                  <p className="text-xs text-muted-foreground">{stat.description}</p>
+                )}
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-12">
+          <motion.div
+            className="col-span-12 lg:col-span-5"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4, delay: 0.4 }}
+          >
+            {isLoading ? (
+              <div className="rounded-xl border bg-card p-6 h-[350px]">
+                <Skeleton className="h-full w-full" />
+              </div>
+            ) : (
+              <MonthlyTrendChart />
+            )}
+          </motion.div>
+          <motion.div
+            className="col-span-12 md:col-span-6 lg:col-span-3"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4, delay: 0.5 }}
+          >
+            {isLoading ? (
+              <div className="rounded-xl border bg-card p-6 h-[350px]">
+                <Skeleton className="h-full w-full" />
+              </div>
+            ) : (
+              <CategoryPieChart />
+            )}
+          </motion.div>
+          <motion.div
+            className="col-span-12 md:col-span-6 lg:col-span-4"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4, delay: 0.6 }}
+          >
+            {isLoading ? (
+              <div className="rounded-xl border bg-card p-6 h-[400px]">
+                <Skeleton className="h-full w-full" />
+              </div>
+            ) : (
+              <BudgetGoals />
+            )}
+          </motion.div>
+        </div>
+
+        <motion.div
+          className="rounded-xl border bg-card text-card-foreground shadow-sm p-6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.6 }}
+        >
+          <h3 className="font-semibold leading-none tracking-tight mb-4">Recent Transactions</h3>
+          <AnimatePresence mode="wait">
+            {isLoading ? (
+              <motion.div
+                key="skeleton"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <TransactionListSkeleton />
+              </motion.div>
+            ) : (
+              <motion.div
+                key="list"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <TransactionList />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
+      </motion.div>
+    </ErrorBoundary>
   );
 }
