@@ -1,5 +1,6 @@
 import { Wallet, TrendingUp, TrendingDown, PiggyBank } from 'lucide-react';
 import { AddTransactionDialog } from '@/components/transactions/AddTransactionDialog';
+import { TransactionList } from '@/components/transactions/TransactionList';
 
 export default function DashboardPage() {
   return (
@@ -39,9 +40,7 @@ export default function DashboardPage() {
         </div>
         <div className="col-span-3 rounded-xl border bg-card text-card-foreground shadow-sm p-6">
           <h3 className="font-semibold leading-none tracking-tight mb-4">Recent Transactions</h3>
-          <div className="h-[200px] flex items-center justify-center border-2 border-dashed rounded-lg bg-muted/20 text-muted-foreground">
-            List Placeholder
-          </div>
+          <TransactionList />
         </div>
       </div>
     </div>
