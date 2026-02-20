@@ -1,5 +1,9 @@
 "use client"
 
+import { v4 as uuidv4 } from "uuid"
+import { toast } from "sonner"
+import { useTransactionStore } from "@/store/useStore"
+
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -41,13 +45,9 @@ import { Calendar } from "@/components/ui/calendar"
 const formSchema = z.object({
     amount: z.coerce.number().positive("Amount must be positive"),
     category: z.string().min(1, "Category is required"),
-    date: z.date({
-        required_error: "Date is required",
-    }),
+    date: z.date(),
     note: z.string().optional(),
-    type: z.enum(["income", "expense"], {
-        required_error: "Transaction type is required",
-    }),
+    type: z.enum(["income", "expense"]),
 })
 
 type FormValues = z.infer<typeof formSchema>
@@ -56,9 +56,10 @@ export function AddTransactionDialog() {
     const [open, setOpen] = useState(false)
 
     const form = useForm<FormValues>({
-        resolver: zodResolver(formSchema),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        resolver: zodResolver(formSchema) as any,
         defaultValues: {
-            amount: undefined,
+            amount: 0,
             category: "",
             date: new Date(),
             note: "",
@@ -66,12 +67,32 @@ export function AddTransactionDialog() {
         },
     })
 
+    const addTransaction = useTransactionStore((state) => state.addTransaction)
+
     function onSubmit(values: FormValues) {
-        console.log(values)
-        // TODO: Add to store (Day 4)
-        // For now, just close and reset to test UX
-        setOpen(false)
-        form.reset()
+        try {
+            addTransaction({
+                id: uuidv4(),
+                type: values.type,
+                amount: values.amount,
+                category: values.category,
+                date: values.date.toISOString(),
+                note: values.note,
+            })
+
+            toast.success("Transaction added successfully")
+            setOpen(false)
+            form.reset({
+                amount: undefined,
+                category: "",
+                date: new Date(),
+                note: "",
+                type: "expense",
+            })
+        } catch (error) {
+            console.error("Failed to add transaction:", error)
+            toast.error("Failed to add transaction")
+        }
     }
 
     return (
