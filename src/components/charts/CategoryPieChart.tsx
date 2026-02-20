@@ -75,6 +75,14 @@ export function CategoryPieChart() {
                                 ))}
                             </Pie>
                             <Tooltip
+                                contentStyle={{
+                                    backgroundColor: 'hsl(var(--card))',
+                                    borderColor: 'hsl(var(--border))',
+                                    borderRadius: '8px',
+                                    fontSize: '12px',
+                                    color: 'hsl(var(--card-foreground))'
+                                }}
+                                itemStyle={{ color: 'hsl(var(--card-foreground))' }}
                                 formatter={(value: any) =>
                                     new Intl.NumberFormat("en-US", {
                                         style: "currency",

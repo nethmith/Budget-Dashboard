@@ -96,11 +96,14 @@ export function MonthlyTrendChart() {
                                 <Tooltip
                                     cursor={{ fill: 'hsl(var(--muted))', opacity: 0.1 }}
                                     contentStyle={{
-                                        backgroundColor: 'hsl(var(--background))',
+                                        backgroundColor: 'hsl(var(--card))',
                                         borderColor: 'hsl(var(--border))',
                                         borderRadius: '8px',
-                                        fontSize: '12px'
+                                        fontSize: '12px',
+                                        color: 'hsl(var(--card-foreground))'
                                     }}
+                                    itemStyle={{ color: 'hsl(var(--card-foreground))' }}
+                                    labelStyle={{ color: 'hsl(var(--card-foreground))', fontWeight: 'bold' }}
                                     formatter={(value: any) =>
                                         new Intl.NumberFormat("en-US", {
                                             style: "currency",
@@ -131,11 +134,14 @@ export function MonthlyTrendChart() {
                                 />
                                 <Tooltip
                                     contentStyle={{
-                                        backgroundColor: 'hsl(var(--background))',
+                                        backgroundColor: 'hsl(var(--card))',
                                         borderColor: 'hsl(var(--border))',
                                         borderRadius: '8px',
-                                        fontSize: '12px'
+                                        fontSize: '12px',
+                                        color: 'hsl(var(--card-foreground))'
                                     }}
+                                    itemStyle={{ color: 'hsl(var(--card-foreground))' }}
+                                    labelStyle={{ color: 'hsl(var(--card-foreground))', fontWeight: 'bold' }}
                                     formatter={(value: any) =>
                                         new Intl.NumberFormat("en-US", {
                                             style: "currency",
