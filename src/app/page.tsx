@@ -5,6 +5,7 @@ import { Wallet, TrendingUp, TrendingDown, PiggyBank } from 'lucide-react';
 import { TransactionFormDialog } from '@/components/transactions/TransactionFormDialog';
 import { TransactionList } from '@/components/transactions/TransactionList';
 import { CategoryPieChart } from '@/components/charts/CategoryPieChart';
+import { MonthlyTrendChart } from '@/components/charts/MonthlyTrendChart';
 import { useTransactionStore } from '@/store/useStore';
 import { isSameMonth } from 'date-fns';
 
@@ -124,12 +125,16 @@ export default function DashboardPage() {
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
         <div className="col-span-4">
+          <MonthlyTrendChart />
+        </div>
+        <div className="col-span-3">
           <CategoryPieChart />
         </div>
-        <div className="col-span-3 rounded-xl border bg-card text-card-foreground shadow-sm p-6">
-          <h3 className="font-semibold leading-none tracking-tight mb-4">Recent Transactions</h3>
-          <TransactionList />
-        </div>
+      </div>
+
+      <div className="rounded-xl border bg-card text-card-foreground shadow-sm p-6">
+        <h3 className="font-semibold leading-none tracking-tight mb-4">Recent Transactions</h3>
+        <TransactionList />
       </div>
     </div>
   );
