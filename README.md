@@ -18,7 +18,7 @@ BudgetFlow is a premium, high-performance personal finance dashboard built with 
 
 -   **Framework:** Next.js 14+ (App Router)
 -   **Styling:** Tailwind CSS
--   **Components:** shadcn/ui
+-   **Components:** Shadcn/ui
 -   **State Management:** Zustand
 -   **Animations:** Framer Motion
 -   **Charts:** Recharts
@@ -54,4 +54,4 @@ BudgetFlow is a premium, high-performance personal finance dashboard built with 
 
 ## 📄 License
 
-MIT License - feel free to use and adapt!
+MIT License - Feel free to use and adapt!!
